@@ -11,11 +11,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-tabella = pd.read_csv('/workspace/Progetto/Progetto/csv/Tabella esercizi - Tabella.csv', sep=',')
+tabella = pd.read_csv('/workspace/Progetto/csv/Tabella esercizi - Tabella.csv', sep=',')
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home2.html')
+    return render_template('home.html')
 
 @app.route('/esercizi', methods=['GET'])
 def directory():

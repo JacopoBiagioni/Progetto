@@ -18,8 +18,8 @@ def home():
     return render_template('home.html')
 
 @app.route('/esercizi', methods=['GET'])
-def directory():
-    return render_template('directory.html')
+def esercizi():
+    return render_template('esercizi.html')
 
 @app.route('/addominali', methods=['GET'])
 def addominali():

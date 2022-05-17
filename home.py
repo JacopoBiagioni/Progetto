@@ -10,6 +10,10 @@ from matplotlib.figure import Figure
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import folium
+import requests
+from xml.etree import ElementTree
+import numpy as np
 
 tabella = pd.read_csv('/workspace/Progetto/csv/Tabella esercizi - Tabella.csv', sep=',')
 

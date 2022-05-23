@@ -16,6 +16,7 @@ from xml.etree import ElementTree
 import numpy as np
 
 tabella = pd.read_csv('/workspace/Progetto/csv/Tabella esercizi - Tabella.csv', sep=',')
+palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=',')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -83,7 +84,14 @@ def tricipiti():
 
 @app.route('/mappa', methods=['GET'])
 def mappa():
-    return render_template('mappa.html')
+    m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
+    for i in range(0,len(palestre)):
+        folium.Marker(
+            location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
+            popup=palestre.iloc[i]['Nome'],
+        ).add_to(m)
+    m
+    return m._repr_html_()
 
 
 if __name__ == '__main__':

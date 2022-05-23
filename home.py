@@ -73,6 +73,14 @@ def trapezio():
 def trapezio2():
     return render_template('Trapezio2.html')
 
+@app.route('/zonalombare', methods=['GET'])
+def zonalombare():
+    return render_template('Zona Lombare.html')
+
+@app.route('/tricipiti', methods=['GET'])
+def tricipiti():
+    return render_template('Tricipiti.html')
+
 @app.route('/mappa', methods=['GET'])
 def mappa():
     return render_template('mappa.html')

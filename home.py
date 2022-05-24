@@ -15,7 +15,6 @@ import requests
 from xml.etree import ElementTree
 import numpy as np
 
-tabella = pd.read_csv('/workspace/Progetto/csv/Tabella esercizi - Tabella.csv', sep=',')
 palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=',')
 
 @app.route('/', methods=['GET'])

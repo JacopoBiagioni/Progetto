@@ -11,11 +11,12 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import folium
+from folium import plugins
 import requests
 from xml.etree import ElementTree
 import numpy as np
 
-palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=',')
+palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=",")
 
 @app.route('/', methods=['GET'])
 def home():
@@ -24,6 +25,10 @@ def home():
 @app.route('/esercizi', methods=['GET'])
 def esercizi():
     return render_template('esercizi.html')
+
+@app.route('/grafico', methods=['GET'])
+def grafico():
+    return render_template('grafico.html')
 
 @app.route('/addominali', methods=['GET'])
 def addominali():
@@ -81,17 +86,28 @@ def zonalombare():
 def tricipiti():
     return render_template('Tricipiti.html')
 
+@app.route('/pagmappa', methods=['GET'])
+def pagmappa():
+    return render_template("paginaperlamappa.html")
+
 @app.route('/mappa', methods=['GET'])
 def mappa():
     m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
+    minimap = plugins.MiniMap()
+    m.add_child(minimap)
     for i in range(0,len(palestre)):
         folium.Marker(
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
             popup=palestre.iloc[i]['Nome'],
         ).add_to(m)
-    m
-    return m._repr_html_()
-
+    
+    m.save("templates/mappa.html")
+    return render_template("mappa.html")
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)
+
+
+
+
+

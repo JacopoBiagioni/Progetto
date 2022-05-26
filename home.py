@@ -86,23 +86,26 @@ def zonalombare():
 def tricipiti():
     return render_template('Tricipiti.html')
 
-@app.route('/pagmappa', methods=['GET'])
-def pagmappa():
-    return render_template("paginaperlamappa.html")
-
 @app.route('/mappa', methods=['GET'])
 def mappa():
     m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
     minimap = plugins.MiniMap()
     m.add_child(minimap)
     for i in range(0,len(palestre)):
+        html=f"""
+        <h1> {palestre.iloc[i]['Nome']}</h1>
+        <ul>
+            <li>{palestre.iloc[i]['Indirizzo']}</li>
+            <li>{palestre.iloc[i]['Link']}</li>
+        </ul>
+        </p>
+        """
         folium.Marker(
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
             popup=palestre.iloc[i]['Nome'],
+            icon=folium.Icon(color='red')
         ).add_to(m)
-    
-    m.save("templates/mappa.html")
-    return render_template("mappa.html")
+    return render_template("mappa.html", html=html)
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

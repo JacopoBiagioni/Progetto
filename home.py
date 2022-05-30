@@ -92,20 +92,11 @@ def mappa():
     minimap = plugins.MiniMap()
     m.add_child(minimap)
     for i in range(0,len(palestre)):
-        html=f"""
-        <h1> {palestre.iloc[i]['Nome']}</h1>
-        <ul>
-            <li>{palestre.iloc[i]['Indirizzo']}</li>
-            <li>{palestre.iloc[i]['Link']}</li>
-        </ul>
-        </p>
-        """
         folium.Marker(
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
-            popup=palestre.iloc[i]['Nome'],
-            icon=folium.Icon(color='red')
+            popup=palestre.iloc[i]['Nome']
         ).add_to(m)
-    return render_template("mappa.html", html=html)
+    return render_template("mappa.html")
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

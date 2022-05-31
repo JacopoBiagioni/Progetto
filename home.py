@@ -86,6 +86,10 @@ def zonalombare():
 def tricipiti():
     return render_template('Tricipiti.html')
 
+@app.route('/pagmappa', methods=['GET'])
+def pagmappa():
+    return render_template("paginaperlamappa.html")
+
 @app.route('/mappa', methods=['GET'])
 def mappa():
     m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
@@ -96,7 +100,9 @@ def mappa():
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
             popup=palestre.iloc[i]['Nome']
         ).add_to(m)
+    m.save('templates/mappa.html')
     return render_template("mappa.html")
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

@@ -22,6 +22,10 @@ palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=",")
 def home():
     return render_template('home.html')
 
+@app.route('/cercapalestra', methods=['GET'])
+def cercapalestra():
+    return render_template('cercapalestra.html')
+
 @app.route('/esercizi', methods=['GET'])
 def esercizi():
     return render_template('esercizi.html')
@@ -92,11 +96,12 @@ def pagmappa():
 
 @app.route('/mappa', methods=['GET'])
 def mappa():
+    #mappa con marker
     m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
-    minimap = plugins.MiniMap()
+    minimap = plugins.MiniMap() #minimappa
     m.add_child(minimap)
     for i in range(0,len(palestre)):
-        folium.Marker(
+        folium.Marker( #informazioni marker
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
             popup=palestre.iloc[i]['Nome']
         ).add_to(m)

@@ -19,30 +19,39 @@ from xml.etree import ElementTree
 import numpy as np
 
 palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=",")
-quartieri = gpd.read_file('/workspace/Progetto/csv/NIL_WM.dbf')
+quartieri = gpd.read_file('/workspace/Progetto/csv/ds964_nil_wm (1).zip')
+palestregdf = gpd.read_file('/workspace/Progetto/csv/palestre.zip')
 
 @app.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
 
-@app.route('/input', methods=['GET'])
-def input():
-    return render_template('input.html')
+@app.route('/dropdown', methods=['GET'])
+def dropdown():
+    #creazione dropdown
+    nomiquartieri = quartieri.NIL.to_list()
+    nomiquartieri = list(set(nomiquartieri))
+    nomiquartieri.sort()
+    return render_template('dropdown.html', quartieri = nomiquartieri)
 
 @app.route('/cercapalestra', methods=['GET'])
 def cercapalestra():
     global QuartPal, QuartieriPal
-    geometry = [Point(xy) for xy in zip(palestre.Longitudine, palestre.Latitudine)]
-    palestre = palestre.drop(['Longitudine', 'Latitudine'], axis=1)
-    gdf = GeoDataFrame(palestre, crs="EPSG:4326", geometry=geometry)
-    quartiere = request.args['quartieri']
-    QuartPal = quartieri[quartieri['NIL'].str.contains(quartiere)]
-    QuartieriPal = stazionigeo[stazionigeo.within(quartiereUtente.geometry.squeeze())]
-    return render_template('cercapalestra.html', risultato = stazioniQuartieri.to_html())
+    quartiere = request.args['quartieri'] #prende l'argomento quartieri
+    QuartPal = quartieri[quartieri['NIL'] == quartiere] #prende il quartiere uguale a quello selezionato
+    QuartieriPal = palestregdf[palestregdf.within(QuartPal.geometry.squeeze())] #trova le palestre all'interno del quartiere selezionato
+    return render_template('cercapalestra.html', tabella = QuartieriPal.to_html())
 
 @app.route('/risultato', methods=['GET'])
 def risultato():
-    return render_template('risultato.html')
+    #creazione mappa
+    fig, ax = plt.subplots(figsize = (12,8))
+    QuartPal.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor='k')
+    QuartieriPal.to_crs(epsg=3857).plot(ax=ax, color='r')
+    ctx.add_basemap(ax=ax)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 
 @app.route('/esercizi', methods=['GET'])
 def esercizi():

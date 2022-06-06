@@ -1,0 +1,8 @@
+<form action="/cercapalestra" method = "GET">
+    <select name="quartieri">
+        {% for i in quartieri%}
+        <option value="{{i}}" >{{i}}</option>
+        {%endfor%}
+    </select>
+    <p><input type = "submit" value = "Submit" /></p>
+</form>

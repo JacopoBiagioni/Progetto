@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, Response, redirect, url_for
 app = Flask(__name__)
 
 import io
+from geopandas import GeoDataFrame
+from shapely.geometry import Point
 import geopandas as gpd
 import pandas as pd
 import contextily as ctx
@@ -17,14 +19,30 @@ from xml.etree import ElementTree
 import numpy as np
 
 palestre = pd.read_csv('/workspace/Progetto/csv/palestre.csv', sep=",")
+quartieri = gpd.read_file('/workspace/Progetto/csv/NIL_WM.dbf')
 
 @app.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
 
+@app.route('/input', methods=['GET'])
+def input():
+    return render_template('input.html')
+
 @app.route('/cercapalestra', methods=['GET'])
 def cercapalestra():
-    return render_template('cercapalestra.html')
+    global QuartPal, QuartieriPal
+    geometry = [Point(xy) for xy in zip(palestre.Longitudine, palestre.Latitudine)]
+    palestre = palestre.drop(['Longitudine', 'Latitudine'], axis=1)
+    gdf = GeoDataFrame(palestre, crs="EPSG:4326", geometry=geometry)
+    quartiere = request.args['quartieri']
+    QuartPal = quartieri[quartieri['NIL'].str.contains(quartiere)]
+    QuartieriPal = stazionigeo[stazionigeo.within(quartiereUtente.geometry.squeeze())]
+    return render_template('cercapalestra.html', risultato = stazioniQuartieri.to_html())
+
+@app.route('/risultato', methods=['GET'])
+def risultato():
+    return render_template('risultato.html')
 
 @app.route('/esercizi', methods=['GET'])
 def esercizi():

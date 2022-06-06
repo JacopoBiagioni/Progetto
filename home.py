@@ -123,15 +123,13 @@ def pagmappa():
 
 @app.route('/mappa', methods=['GET'])
 def mappa():
-    #mappa con marker
     m = folium.Map(location=[45.50,9.20], tiles="OpenStreetMap", zoom_start=12)
-    minimap = plugins.MiniMap() #minimappa
+    minimap = plugins.MiniMap()
     m.add_child(minimap)
     for i in range(0,len(palestre)):
-        folium.Marker( #informazioni marker
+        folium.Marker(
             location=[palestre.iloc[i]['Latitudine'], palestre.iloc[i]['Longitudine']],
-            popup=palestre.iloc[i]['Nome']
-        ).add_to(m)
+            popup=palestre.iloc[i]['Nome']).add_to(m)
     m.save('templates/mappa.html')
     return render_template("mappa.html")
 
